@@ -1,68 +1,36 @@
-// === KONFIGURASI ===
-const SUPABASE_URL = "https://ulyuvqcqtjpmekvwpqtm.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVseXV2cWNxdGpwbWVrdndwcXRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MzkwNTIsImV4cCI6MjA3MjAxNTA1Mn0.K695w_lcRWnhVxUhPzLDs6UfQteHjnofhRakOCUh29A";
-const API_URL = "https://royalvip-server.onrender.com/upload";
+import fs from "fs";
+import path from "path";
 
-const fileInput = document.getElementById("file-input");
-const uploadBtn = document.getElementById("upload-btn");
-const statusEl = document.getElementById("status");
-const videoList = document.getElementById("video-list");
+const targetDir = "./"; // ubah kalau file kamu ada di folder lain
+const searchPatterns = ["https://royalvip-server.onrender.com/upload", "https://royalvip-server.onrender.com/upload", "https://royalvip-server.onrender.com/upload", "https://royalvip-server.onrender.com/upload"];
+const replaceURL = "https://royalvip-server.onrender.com";
 
-// === SUPABASE CLIENT ===
-async function listVideos() {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/videos?select=*`, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-      },
-    });
-    const data = await res.json();
-    videoList.innerHTML = "";
-    data.reverse().forEach(v => {
-      const vid = document.createElement("video");
-      vid.src = v.url;
-      vid.controls = true;
-      videoList.appendChild(vid);
-    });
-  } catch (err) {
-    console.error("❌ Gagal ambil video:", err);
+function replaceInFile(filePath) {
+  let content = fs.readFileSync(filePath, "utf8");
+  let updated = content;
+  for (const pattern of searchPatterns) {
+    const regex = new RegExp(pattern, "g");
+    updated = updated.replace(regex, replaceURL);
+  }
+  if (updated !== content) {
+    fs.writeFileSync(filePath, updated, "utf8");
+    console.log(`✅ Updated: ${filePath}`);
   }
 }
 
-// === UPLOAD VIDEO ===
-uploadBtn.addEventListener("click", async () => {
-  const selectedFile = fileInput.files[0];
-  if (!selectedFile) return alert("Pilih file dulu!");
-
-  statusEl.textContent = "⏳ Uploading...";
-
-  const formData = new FormData();
-  formData.append("file", selectedFile);
-
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: formData });
-    const data = await res.json();
-    console.log("✅ Uploaded:", data.url);
-    statusEl.textContent = "✅ Upload berhasil!";
-
-    await fetch(`${SUPABASE_URL}/rest/v1/videos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        Prefer: "return=representation"
-      },
-      body: JSON.stringify({ url: data.url, created_at: new Date().toISOString() })
-    });
-
-    await listVideos();
-  } catch (err) {
-    console.error("❌ Upload gagal:", err);
-    statusEl.textContent = "❌ Upload gagal.";
+function traverseDirectory(dir) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      traverseDirectory(fullPath);
+    } else if (file.endsWith(".js") || file.endsWith(".html")) {
+      replaceInFile(fullPath);
+    }
   }
-});
+}
 
-// === LOAD DATA SAAT AWAL ===
-listVideos();
+console.log("🚀 Converting local endpoints to global...");
+traverseDirectory(targetDir);
+console.log("✅ All done! Now zip and upload to Cloudflare Pages.");
