@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BETINA ASIA X QJOKER123 — Lobby</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Optional Firebase for cross-device sync -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    window.SYNC_MODE = 'supabase';
+    window.STORAGE_MODE = 'supabase';
+    window.SUPABASE_URL  = 'https://ulyuvqcqtjpmekvwqqtm.supabase.co';
+    window.SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVseXV2cWNxdGpwbWVrdndwcXRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MzkwNTIsImV4cCI6MjA3MjAxNTA1Mn0.K695w_lcRWnhVxUhPzLDs6UfQteHjnofhRakOCUh29A';
+  </script>
+
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <div class="brand">
+        <img src="https://d2eakbhwgig3s7.cloudfront.net/522/assets/banner/IND/LOGO-Q-JOKER_20215312125312.png?V=1750315342" alt="QJOKER Logo"/>
+      </div>
+      <nav>
+        <a href="#" class="active">Lobby</a>
+      </nav>
+      <div class="search">
+        <input id="q" type="text" placeholder="Cari judul atau kategori..." />
+        <button id="btnSearch" type="button">Cari</button>
+      </div>
+      <div class="toolbar">
+        <button id="btnAdmin" class="pill-btn" type="button">Kelola</button>
+        <button id="btnExport" class="btn small" type="button">Ekspor</button>
+        <button id="btnImport" class="btn small outline" type="button">Impor</button>
+        <input id="importFile" type="file" accept=".betina.json" hidden />
+      </div>
+    </div>
+  </header>
+
+  <!-- Filters (with Upload pill) -->
+  <div id="filters" class="filters">
+    <button class="pill active" data-filter="Semua" type="button">Semua</button>
+    <button class="pill" data-filter="THAILAND" type="button">THAILAND</button>
+    <button class="pill" data-filter="JEPANG" type="button">JEPANG</button>
+    <button class="pill" data-filter="CHINA" type="button">CHINA</button>
+    <button class="pill" data-filter="INDONESIA" type="button">INDONESIA</button>
+    <button class="pill" data-filter="FILIPINA" type="button">FILIPINA</button>
+    <button class="pill" data-filter="KOREA" type="button">KOREA</button>
+    <button class="pill pill-upload" data-filter="__UPLOAD__" type="button">Upload</button>
+  </div>
+
+  <!-- Lobby Grid -->
+  <div class="container">
+    <h2 class="section-title">Koleksi Terpopuler</h2>
+    <div id="grid" class="grid lobby" aria-live="polite"></div>
+  </div>
+
+  <!-- Upload Panel (hidden by default) -->
+  <div id="upload" class="container hidden" aria-hidden="true">
+    <div class="panel">
+      <h2>Upload Video</h2>
+      <form id="uploadForm" class="form">
+        <input type="text" id="title" placeholder="Judul" required />
+        <select id="category" required>
+          <option value="">Pilih Kategori</option>
+          <option>THAILAND</option>
+          <option>JEPANG</option>
+          <option>CHINA</option>
+          <option>INDONESIA</option>
+          <option>FILIPINA</option>
+          <option>KOREA</option>
+        </select>
+        <input type="file" id="video" accept="video/*" required />
+        <input type="file" id="poster" accept="image/*" />
+        <input type="url" id="wa" placeholder="Link WhatsApp (opsional)" />
+        <input type="url" id="tg" placeholder="Link Telegram (opsional)" />
+        <button class="btn full" type="submit">Upload</button>
+      </form>
+      <small class="muted">Cloud sync lintas perangkat aktif jika menambahkan konfigurasi Firebase. Tanpa itu, data disimpan lokal dan bisa dipindah via Ekspor/Impor.</small>
+    </div>
+  </div>
+
+  <!-- Modal Player -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-inner">
+      <video id="modalVideo" controls playsinline></video>
+      <div id="modalPaywall" class="paywall hidden">
+        <div class="paywall-box">
+          <div class="paywall-text">BELI VIDEO FULL NYA DI SINI HANYA 30 RIBU SAJA</div>
+          <div class="paywall-actions">
+            <a id="modalWA" class="btn cta" href="#" target="_blank" rel="noopener">BELI VIA WHATSAPP</a>
+            <a id="modalTG" class="btn cta secondary" href="#" target="_blank" rel="noopener">BELI VIA TELEGRAM</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Password (reusable for Upload/Admin) -->
+  <div id="keyModal" class="modal" aria-hidden="true">
+    <div class="modal-inner keybox">
+      <h3>Masukkan Kunci Akses</h3>
+      <input id="keyInput" type="password" placeholder="••••••••" />
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
+        <button id="keyCancel" class="btn outline" type="button">Batal</button>
+        <button id="keyOk" class="btn" type="button">Lanjut</button>
+      </div>
+      <small class="muted">Kunci tidak ditampilkan dan diverifikasi dengan hash.</small>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminPanel" class="modal" aria-hidden="true">
+    <div class="modal-inner adminbox">
+      <div class="admin-head">
+        <h3>Daftar Video Terupload</h3>
+        <button id="adminClose" class="btn outline" type="button">Tutup</button>
+      </div>
+      <div id="adminList" class="admin-list"></div>
+      <small class="muted">Hapus item tertentu bila diperlukan.</small>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Tersimpan.</div>
+  <footer>© BETINA ASIA X ROYAL VIP — Platform kebutuhan streaming nomor 1 se-Indonesia.</footer>
+
+  <script src="assets/js/app.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const url = "https://files.sitestatic.net/ImageFile/20250801152728000000219fda771e__RoyalVIP__800x300.png";
+    const cand = document.querySelector('header img.logo, .brand-logo img, .brand img, header img');
+    if (cand) {
+      cand.src = url;
+      cand.alt = 'RoyalVIP';
+      cand.style.height = '42px';
+      cand.style.objectFit = 'contain';
+    }
+  } catch(e) { console.warn('Logo inject failed', e); }
+});
+</script>
+
+</body>
+</html>
