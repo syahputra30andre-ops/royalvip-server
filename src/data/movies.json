@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "Shadow Protocol",
+    "genre": "Action",
+    "rating": 4.5,
+    "description": "Seorang agen rahasia membongkar konspirasi global yang mengancam keamanan dunia.",
+    "poster": "https://images.unsplash.com/photo-1558980664-10ea1f21b6ab?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 2,
+    "title": "Celestial Voyage",
+    "genre": "Sci-Fi",
+    "rating": 4.2,
+    "description": "Misi antarbintang pertama manusia menghadapi paradoks waktu dan batas akal.",
+    "poster": "https://images.unsplash.com/photo-1517976487492-57618124bf1c?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1462332420958-a05d1e002413?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 3,
+    "title": "Echoes of Silence",
+    "genre": "Drama",
+    "rating": 4.1,
+    "description": "Kisah keluarga yang mencoba berdamai dengan masa lalu yang menyakitkan.",
+    "poster": "https://images.unsplash.com/photo-1526366269918-cf78c088247c?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 4,
+    "title": "Laugh Lines",
+    "genre": "Komedi",
+    "rating": 3.9,
+    "description": "Komika gagal menemukan inspirasi dari kehidupan sehari-hari yang kacau.",
+    "poster": "https://images.unsplash.com/photo-1531870979162-87b28e0cc3f7?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 5,
+    "title": "Night Fracture",
+    "genre": "Horor",
+    "rating": 4.0,
+    "description": "Sebuah kota kecil dihantui oleh entitas yang muncul setiap pukul 3 pagi.",
+    "poster": "https://images.unsplash.com/photo-1500522144261-ea64433bbe27?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 6,
+    "title": "Quantum Heart",
+    "genre": "Sci-Fi",
+    "rating": 4.3,
+    "description": "AI canggih mulai mengembangkan emosi dan menantang batas kemanusiaan.",
+    "poster": "https://images.unsplash.com/photo-1529101091764-c3526daf38fe?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1547234935-80c7145ec969?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 7,
+    "title": "Crimson Chase",
+    "genre": "Action",
+    "rating": 4.0,
+    "description": "Perburuan lintas negara demi mencegah serangan siber besar-besaran.",
+    "poster": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1520975922203-b0b35f1c87e9?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 8,
+    "title": "Tides of Memory",
+    "genre": "Drama",
+    "rating": 3.8,
+    "description": "Seorang pelukis kehilangan memori dan menemukan kembali jati diri melalui karya.",
+    "poster": "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1500534314209-a26db0f5b553?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 9,
+    "title": "Pixel Panic",
+    "genre": "Komedi",
+    "rating": 3.7,
+    "description": "Dua pengembang indie terjebak dalam game yang mereka buat sendiri.",
+    "poster": "https://images.unsplash.com/photo-1526406915894-6c1d6b60c0e6?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1600&auto=format&fit=crop"
+  },
+  {
+    "id": 10,
+    "title": "Whispering Walls",
+    "genre": "Horor",
+    "rating": 4.1,
+    "description": "Rumah tua menyimpan rahasia gelap yang menuntut pengorbanan.",
+    "poster": "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=900&auto=format&fit=crop",
+    "backdrop": "https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=1600&auto=format&fit=crop"
+  }
+]
