@@ -1,51 +1,53 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-import multer from 'multer';
-import { createClient } from '@supabase/supabase-js';
-import { randomUUID } from 'crypto';
-import path from 'path';
-
-dotenv.config();
+import express from "express";
+import cors from "cors";
+import multer from "multer";
+import fs from "fs";
+import path from "path";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
-
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || 'videos';
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(helmet());
-app.use(morgan('combined'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const storage = multer.memoryStorage();
+const __dirname = path.resolve();
+const uploadDir = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    const safeName = file.originalname
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_\.-]/g, "");
+    cb(null, `${uniqueSuffix}-${safeName}`);
+  },
+});
 const upload = multer({ storage });
 
-app.get('/', (req, res) => {
-  res.json({ message: 'RoyalVIP Server is running.' });
+app.get("/", (req, res) => {
+  res.status(200).send("✅ RoyalVIP Server Aktif");
 });
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-
-    const ext = path.extname(req.file.originalname);
-    const fileName = `${randomUUID()}${ext}`;
-    const { error } = await supabase.storage.from(SUPABASE_BUCKET).upload(fileName, req.file.buffer, {
-      contentType: req.file.mimetype,
-    });
-
-    if (error) return res.status(500).json({ error: error.message });
-
-    const { data: signedUrlData } = await supabase.storage.from(SUPABASE_BUCKET).createSignedUrl(fileName, 60 * 60 * 24);
-    return res.json({ url: signedUrlData.signedUrl });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Upload failed', detail: err.message });
+app.post("/upload", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Tidak ada file yang diunggah." });
   }
+
+  const fileUrl = `https://royalvip-server.onrender.com/uploads/${req.file.filename}`;
+  res.json({ url: fileUrl });
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.use("/uploads", express.static(uploadDir));
+
+app.listen(PORT, () => {
+  console.log(`✅ Server berjalan di port ${PORT}`);
+});
